@@ -1,11 +1,12 @@
 # DESolver-AI-Master
 
-**Welcome to the AI Revolution in Computational Physiology**
+**Welcome to the AI Revolution in Computational Modeling**
 
-This repository contains a collection of rough-draft *mini-models* developed using state-of-the-art language models, including OpenAI's ChatGPT, Claude AI, and NotebookLM. These mini-models are written in the DESolver syntax, compatible with **HumMod**—a comprehensive framework for simulating integrative human physiology.
+This repository contains a collection of rough-draft *mini-models* for **Tom Coleman's DESolver** developed using state-of-the-art language models, including OpenAI's ChatGPT, Claude AI, and NotebookLM. These mini-models are written in the DESolver syntax, compatible with **HumMod**—a comprehensive framework for simulating integrative human physiology.
   
 🎥 A video demonstration of model development is available on [YouTube](https://www.youtube.com/watch?v=UOPwOKI7-h0&feature=youtu.be).
 
+For HumMod visit [Drew Pruett's HumMod Repository] (https://github.com/HumMod)
 
 ## Purpose
 
