@@ -6,7 +6,7 @@ This repository contains a collection of rough-draft *mini-models* for **Tom Col
   
 🎥 A video demonstration of model development is available on [YouTube](https://www.youtube.com/watch?v=UOPwOKI7-h0&feature=youtu.be).
 
-For HumMod visit [Drew Pruett's HumMod Repository] (https://github.com/HumMod)
+For HumMod visit [Drew Pruett's HumMod Repository](https://github.com/HumMod)
 
 ## Purpose
 
