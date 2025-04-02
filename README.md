@@ -27,7 +27,7 @@ This initiative represents a small but significant step toward the next generati
 > These are *starting points*, not validated physiological simulations.
 
 **List of Models:**
-- (You can populate this with entries like: `AA-Glutamate`, `Adaptation`, `BetaHydroxyButyrateMetabolism`, etc.)
+- COMING SOON 
 
 ---
 
