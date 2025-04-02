@@ -1,0 +1,151 @@
+<?xml version = '1.0' ?>
+
+<model>
+
+  <title><basic> Sequoia Tree Growth </basic></title>
+
+  <structure>
+    <name> TreeGrowth </name>
+
+    <variables>
+      <!-- Environmental Parameters -->
+      <parm><name> Light </name><val> 0.8 </val></parm>
+      <parm><name> Nutrients </name><val> 0.7 </val></parm>
+      <parm><name> Water </name><val> 0.9 </val></parm>
+      <parm><name> Temperature </name><val> 0.85 </val></parm>
+
+      <!-- Growth rate constant -->
+      <parm><name> GrowthRate </name><val> 0.5 </val></parm>
+
+      <!-- Computed variable for environmental factor -->
+      <var><name> EnvFactor </name></var>
+
+    </variables>
+
+    <equations>
+      <diffeq>
+        <name> Biomass </name>
+        <integralname> Biomass </integralname>
+        <initialval> 1.0 </initialval>
+        <dervname> dB/dt </dervname>
+        <errorlim> 0.01 </errorlim>
+      </diffeq>
+    </equations>
+
+    <definitions>
+      <block><name> Dervs </name>
+        <!-- Environmental modifier as a product of all inputs -->
+        <def>
+          <name> EnvFactor </name>
+          <val> Light * Nutrients * Water * Temperature </val>
+        </def>
+
+        <!-- Growth equation -->
+        <def>
+          <name> dB/dt </name>
+          <val> GrowthRate * EnvFactor * Biomass </val>
+        </def>
+      </block>
+    </definitions>
+  </structure>
+
+  <math>
+    <dervs> TreeGrowth.Dervs </dervs>
+  </math>
+
+  <control>
+    <gofor>
+      <solutionint> 50 </solutionint>
+      <displayint> 1.0 </displayint>
+    </gofor>
+  </control>
+
+  <display>
+    <panel>
+      <name> Sequoia Tree Growth </name>
+      <structurename> TreeGrowth </structurename>
+
+      <showpanelname>
+        <row> 0.5 </row><col> 1.0 </col>
+      </showpanelname>
+
+      <showvalue>
+        <row> 2 </row><col> 1 </col>
+        <name> Biomass </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Tree Biomass </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 3 </row><col> 1 </col>
+        <name> EnvFactor </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Environmental Factor </label>
+      </showvalue>
+
+      <repeatlist>
+        <name> Light </name>
+        <repeat><reps> 11 </reps><stepsize> 0.1 </stepsize></repeat>
+      </repeatlist>
+      <slidebar>
+        <row> 5 </row><col> 1 </col>
+        <name> Light </name>
+        <listname> Light </listname>
+        <label> Light Intensity </label>
+      </slidebar>
+
+      <repeatlist>
+        <name> Nutrients </name>
+        <repeat><reps> 11 </reps><stepsize> 0.1 </stepsize></repeat>
+      </repeatlist>
+      <slidebar>
+        <row> 6.5 </row><col> 1 </col>
+        <name> Nutrients </name>
+        <listname> Nutrients </listname>
+        <label> Nutrient Availability </label>
+      </slidebar>
+
+      <repeatlist>
+        <name> Water </name>
+        <repeat><reps> 11 </reps><stepsize> 0.1 </stepsize></repeat>
+      </repeatlist>
+      <slidebar>
+        <row> 8 </row><col> 1 </col>
+        <name> Water </name>
+        <listname> Water </listname>
+        <label> Water Availability </label>
+      </slidebar>
+
+      <repeatlist>
+        <name> Temperature </name>
+        <repeat><reps> 11 </reps><stepsize> 0.1 </stepsize></repeat>
+      </repeatlist>
+      <slidebar>
+        <row> 9.5 </row><col> 1 </col>
+        <name> Temperature </name>
+        <listname> Temperature </listname>
+        <label> Temperature Suitability </label>
+      </slidebar>
+
+      <showgraph>
+        <row> 2 </row><col> 30 </col>
+        <high> 10 </high><wide> 30 </wide>
+        <xaxis>
+          <name> System.X </name>
+          <label> Time </label>
+          <scale><min> 0 </min><max> 50 </max></scale>
+        </xaxis>
+        <yaxis>
+          <yvar>
+            <name> Biomass </name>
+            <label> Tree Biomass </label>
+            <linecolor> GREEN </linecolor>
+          </yvar>
+          <scale><min> 0 </min><max> 100 </max></scale>
+        </yaxis>
+      </showgraph>
+
+    </panel>
+  </display>
+
+</model>
