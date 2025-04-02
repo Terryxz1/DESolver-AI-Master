@@ -1,6 +1,6 @@
 # DESolver-AI-Master
 
-##Welcome to the AI Revolution in Computational Modeling
+## Welcome to the AI Revolution in Computational Modeling
 
 This repository contains a collection of rough-draft *mini-models* for **Tom Coleman's DESolver** developed using state-of-the-art language models, including OpenAI's ChatGPT, Claude AI, and NotebookLM. These mini-models are written in the DESolver syntax, compatible with **HumMod**—a comprehensive framework for simulating integrative human physiology.
   
