@@ -27,8 +27,14 @@ This initiative represents a small but significant step toward the next generati
 > These are *starting points*, not validated physiological simulations.
 
 **List of Models:**
-- COMING SOON 
-
+- Hair Growth (Claude AI and OpenAI versions) - Latest AI training used 
+- High Pass Filter, same as Resistor Capacitor filter - used in electronics for signal processing 
+- Sequoia Tree Growth - this one appears accurate, climate is being added - Latest AI Training used
+- Water Heater - this was an attempt at thermodynamics - Old training OpenAI ChatGPT 
+- Pressure Cooker - Explodes at certain pressure, the units are way off, earlier AI training used
+- SandClock - Older AI training used
+- Labour - for uterine contractions, this may not be the latest reiteration or the best one - Old AI training
+- 
 ---
 
 ## ⚙️ Format
