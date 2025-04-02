@@ -15,11 +15,18 @@ These models are offered as open resources for public exploration and collaborat
 
 By harnessing the ability of large language models (LLMs) to interpret, synthesize, and express complex scientific ideas, we aim to:
 
-- Accelerate scientific discovery in **in silico physiology**
+- Accelerate scientific research **in silico** 
 - Democratize access to computational modeling tools
 - Foster open-science collaborations across disciplines
 
 This initiative represents a small but significant step toward the next generation of research tools—where AI and scientists work hand-in-hand to uncover new insights in health, medicine, and systems biology.
+
+**Markdown instructions used for AI training are included. They can be used as context files for the AI Assistants (in Claude AI for example) to understand how to generate DESolver mini-models. The instructions are in draft stages, generated from publically accessible documentat text converted into markdown.**
+Seperate instructions have to be developed for large HumMod model as well. 
+
+The following Links lead to OpenAI (subscription required) [HumMod Assistant](https://chatgpt.com/g/g-678023d18b6c8191b7fe4a22c0e56fad-hm-mini-assistant) and 
+[HM Mini Assistant]https://chatgpt.com/g/g-bn4wJyzO0-hummod-assistant
+
 
 ---
 
