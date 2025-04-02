@@ -25,7 +25,7 @@ This initiative represents a small but significant step toward the next generati
 Seperate instructions have to be developed for large HumMod model as well. 
 
 The following Links lead to OpenAI (subscription required) [HumMod Assistant](https://chatgpt.com/g/g-678023d18b6c8191b7fe4a22c0e56fad-hm-mini-assistant) and 
-[HM Mini Assistant]https://chatgpt.com/g/g-bn4wJyzO0-hummod-assistant
+[HM Mini Assistant](https://chatgpt.com/g/g-bn4wJyzO0-hummod-assistant)
 
 
 ---
