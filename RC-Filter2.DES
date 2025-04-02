@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+
+<model>
+  <title><basic>Low-Pass RC Filter</basic></title>
+
+  <structure>
+    <name>RC_Filter</name>
+
+    <variables>
+      <!-- Parameters: Resistance, Capacitance, and Input Voltage -->
+      <parm>
+        <name> R </name>
+        <val> 1000.0 </val>  <!-- 1kΩ -->
+      </parm>
+
+      <parm>
+        <name> C </name>
+        <val> 0.000001 </val>  <!-- 1μF -->
+      </parm>
+
+      <parm>
+        <name> Vin </name>
+        <val> 1.0 </val>  <!-- 1V Step Input -->
+      </parm>
+
+      <var>
+        <name> Tau </name>
+      </var>
+
+    </variables>
+
+    <equations>
+      <!-- Differential equation for the output voltage -->
+      <diffeq>
+        <name> Vout </name>
+        <integralname> Vout </integralname>
+        <initialval> 0.0 </initialval>
+        <dervname> dVout/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+    </equations>
+
+    <definitions>
+      <block><name>Parms</name>
+        <def>
+          <name> Tau </name>
+          <val> R * C </val>
+        </def>
+      </block>
+
+      <block><name>Dervs</name>
+        <def>
+          <name> dVout/dt </name>
+          <val> ( Vin - Vout ) / Tau </val>
+        </def>
+      </block>
+    </definitions>
+  </structure>
+
+  <math>
+    <parms>RC_Filter.Parms</parms>
+    <dervs>RC_Filter.Dervs</dervs>
+  </math>
+
+
+  <control>
+    <gofor>
+      <solutionint> 0.00001 </solutionint>
+      <displayint> 0.00001 </displayint>
+    </gofor>
+
+      <gofor>
+      <solutionint> 0.001 </solutionint>
+      <displayint> 0.0001 </displayint>
+    </gofor>
+
+         <gofor>
+      <solutionint> 0.3 </solutionint>
+      <displayint> 0.001 </displayint>
+    </gofor> 
+
+      <gofor>
+      <solutionint> 1 </solutionint>
+      <displayint> 0.1 </displayint>
+    </gofor>
+  </control>
+
+  <display>
+    <panel>
+      <name>RC Filter Response</name>
+      <structurename>RC_Filter</structurename>
+
+      <!-- Display Input, Output, and Tau -->
+      <showvalue>
+        <row> 1 </row><col> 1 </col>
+        <name> Vin </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Input Voltage </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 2 </row><col> 1 </col>
+        <name> Vout </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Output Voltage </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 3 </row><col> 1 </col>
+        <name> Tau </name>
+        <format><decimal> 6 </decimal></format>
+        <label> Time Constant (Tau) </label>
+      </showvalue>
+
+      <!-- Graph showing Input vs. Output -->
+      <showgraph>
+        <row> 4 </row><col> 1 </col>
+        <high> 10 </high><wide> 30 </wide>
+        <leftmargin> 5 </leftmargin>
+        <xaxis>
+          <name> System.X </name>
+          <label> Time (s) </label>
+          <scale><min> 0 </min><max> 0.5e-006</max></scale>
+        </xaxis>
+        <yaxis>
+          <yvar>
+            <name> Vout </name>
+            <label> Output Voltage </label>
+            <linecolor> BLUE </linecolor>
+          </yvar>
+          <yvar>
+            <name> Vin </name>
+            <label> Input Voltage </label>
+            <linecolor> RED </linecolor>
+          </yvar>
+          <scale><min> 0 </min><max> 1.0 </max></scale>
+        </yaxis>
+      </showgraph>
+
+      <!-- Groupbox for Resistance (R) Adjustment -->
+      <groupbox>
+        <row> 6 </row><col> 30 </col>
+        <high> 3 </high><wide> 20 </wide>
+        <title> Adjust Resistance (Ω) </title>
+
+        <repeatlist>
+          <name> R </name>
+          <firstval> 100 </firstval>
+          <repeat><reps> 20 </reps><stepsize> 500 </stepsize></repeat>
+        </repeatlist>
+
+        <slidebar>
+          <row> 1.5 </row><col> 1 </col>
+          <name> R </name>
+          <listname> R </listname>
+          <label> Resistance (Ω) </label>
+        </slidebar>
+      </groupbox>
+
+      <!-- Groupbox for Capacitance (C) Adjustment -->
+      <groupbox>
+        <row> 2 </row><col> 30 </col>
+        <high> 3 </high><wide> 20 </wide>
+        <title> Adjust Capacitance (F) </title>
+
+        <repeatlist>
+          <name> C </name>
+          <firstval> 0.0000001 </firstval>  <!-- 0.1 μF -->
+          <repeat><reps> 20 </reps><stepsize> 0.0000001 </stepsize></repeat>
+        </repeatlist>
+
+        <slidebar>
+          <row> 1.5 </row><col> 1 </col>
+          <name> C </name>
+          <listname> C </listname>
+          <label> Capacitance (F) </label>
+        </slidebar>
+      </groupbox>
+
+    </panel>
+  </display>
+</model>

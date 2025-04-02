@@ -1,0 +1,123 @@
+<model>
+  <title><basic>Uterine Contractions During Labour</basic></title>
+  
+  <structure>
+    <name>LabourStages</name>
+    <variables>
+      <!-- Hormonal Factors -->
+      <parm>
+        <name>OxytocinBase</name>
+        <val>10.0</val>
+      </parm>
+      <var>
+        <name>OxytocinLevel</name>
+        <val>0.0</val>
+      </var>
+      
+      <!-- Contraction Dynamics -->
+      <var><name>ContractionAmplitude</name></var>
+      <var><name>ContractionFrequency</name></var>
+      <var><name>ContractionDuration</name></var>
+      
+      <!-- Labour Progression -->
+      <parm><name>Progression</name><val>0.0</val></parm>
+      <parm>
+        <name>LabourDuration</name>
+        <val>24.0</val>
+      </parm>
+      <var><name>PainLevel</name><val>0.0</val></var>
+    </variables>
+    
+    <equations>
+      <!-- Oxytocin Dynamics -->
+      <diffeq>
+        <name>OxytocinLevel</name>
+        <integralname>Oxytocin</integralname>
+        <initialval>10.0</initialval>
+        <dervname>OxytocinChange</dervname>
+        <errorlim>0.1</errorlim>
+      </diffeq>
+    </equations>
+      <!-- Contraction Dynamics -->
+      <definitions>
+        <block>
+          <name>LabourDynamics</name>
+          <def>
+            <name>ContractionAmplitude</name>
+            <val>OxytocinLevel * ( Progression + 1 ) * 0.1</val>
+          </def>
+          <def>
+            <name>ContractionFrequency</name>
+            <val>1 / ( 0.5 + Progression )</val>
+          </def>
+          <def>
+            <name>ContractionDuration</name>
+            <val>0.2 + ( Progression * 0.05 )</val>
+          </def>
+          <def>
+            <name>PainLevel</name>
+            <val>ContractionAmplitude * 0.5</val>
+          </def>
+    
+        <conditional>
+          <name>Progression</name>
+          <test>Progression LT 1.0</test>
+          <true>Progression + 0.1</true>
+          <false>1.0</false>
+        </conditional>
+      </block>
+    </definitions>
+  </structure>
+
+  <math>
+    <dervs>LabourStages.LabourDynamics</dervs>
+
+  </math>
+  
+  <control>
+    <gofor>
+      <solutionint>15.0</solutionint>
+      <displayint> 1.0 </displayint>
+      <menuitem>Simulation Step</menuitem>
+    </gofor>
+  </control>
+  
+  <display>
+    <panel>
+      <name>Labour Progression</name>
+ <repeatlist>
+      <name> LabourProgression </name>
+      <repeat><reps> 10 </reps><stepsize> 0.1 </stepsize></repeat>
+    </repeatlist>
+
+    <slidebar>
+      <row> 1.4 </row><col> 1.0 </col>
+      <name> Progression </name>
+      <listname> LabourProgression </listname>
+      <label> Labour Progression </label>
+    </slidebar>
+
+      <showvalue>
+        <row>2</row>
+        <col>1</col>
+        <name>ContractionAmplitude</name>
+        <format><decimal>2</decimal></format>
+        <label>Contraction Strength</label>
+      </showvalue>
+      <showvalue>
+        <row>3</row>
+        <col>1</col>
+        <name>ContractionFrequency</name>
+        <format><decimal>2</decimal></format>
+        <label>Contraction Frequency</label>
+      </showvalue>
+      <showvalue>
+        <row>4</row>
+        <col>1</col>
+        <name>PainLevel</name>
+        <format><decimal>2</decimal></format>
+        <label>Pain Level</label>
+      </showvalue>
+    </panel>
+  </display>
+</model>

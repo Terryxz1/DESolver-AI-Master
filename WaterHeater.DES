@@ -1,0 +1,238 @@
+<?xml version='1.0' ?>
+<model>
+
+<title><basic> Water Heater </basic></title>
+
+<structure>
+<name> WaterHeater </name>
+
+<variables>
+<!-- Tank Parameters -->
+<parm>
+  <name> TankSize </name>
+  <val> 50.0 </val>
+</parm>
+
+<parm>
+  <name> InitialTemp </name>
+  <val> 15.0 </val>
+</parm>
+
+<parm>
+  <name> TargetTemp </name>
+  <val> 60.0 </val>
+</parm>
+
+<parm>
+  <name> FlowRate </name>
+  <val> 0.2 </val>
+</parm>
+
+<!-- Calculated Variables -->
+<var>
+  <name> WaterRemaining </name>
+  <val> 50.0 </val>
+</var>
+
+<var>
+  <name> EnergyRequired </name>
+</var>
+
+<var>
+  <name> WaterUsed </name>
+  <val> 0.0 </val>
+</var>
+
+<constant>
+  <name> WATER_DENSITY </name>
+  <val> 1.0 </val>
+</constant>
+
+<constant>
+  <name> SPECIFIC_HEAT </name>
+  <val> 4.186 </val>
+</constant>
+
+</variables>
+
+<equations>
+<diffeq>
+  <name> WaterVolume </name>
+  <integralname> WaterVolume </integralname>
+  <initialval> 50.0 </initialval>
+  <dervname> dVolume/dt </dervname>
+  <errorlim> 1.0 </errorlim>
+</diffeq>
+</equations>
+
+<definitions>
+<block><name> Calc </name>
+
+<def>
+  <name> EnergyRequired </name>
+  <val> TankSize * WATER_DENSITY * SPECIFIC_HEAT * ( TargetTemp - InitialTemp ) </val>
+</def>
+
+<def>
+  <name> dVolume/dt </name>
+  <val> -FlowRate </val>
+</def>
+
+<def>
+  <name> WaterRemaining </name>
+  <val> WaterVolume </val>
+</def>
+
+<def>
+  <name> WaterUsed </name>
+  <val> TankSize - WaterVolume </val>
+</def>
+
+</block>
+</definitions>
+
+<math>
+  <dervs> WaterHeater.Calc </dervs>
+</math>
+
+<control>
+<gofor>
+  <solutionint> 300.0 </solutionint>
+  <displayint> 1.0 </displayint>
+</gofor>
+</control>
+
+<display>
+<panel><name> Water Heater Status </name>
+
+<structurename> WaterHeater </structurename>
+
+<showpanelname>
+  <row> 0.5 </row><col> 1.0 </col>
+</showpanelname>
+
+<!-- Tank Configuration -->
+<groupbox>
+   <row> 2.0 </row><col> 1.0 </col>
+   <high> 7.0 </high><wide> 30.0 </wide>
+   <title> Tank Configuration </title>
+
+<repeatlist>
+  <name> Size-List </name>
+  <firstval> 30.0 </firstval>
+  <repeat>
+    <reps> 71 </reps>
+    <stepsize> 1.0 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+  <row> 1.4 </row><col> 1.0 </col>
+  <name> TankSize </name>
+  <listname> Size-List </listname>
+  <label> Tank Size (Gallons) </label>
+</slidebar>
+
+<repeatlist>
+  <name> Flow-List </name>
+  <firstval> 0.1 </firstval>
+  <repeat>
+    <reps> 20 </reps>
+    <stepsize> 0.1 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+  <row> 2.8 </row><col> 1.0 </col>
+  <name> FlowRate </name>
+  <listname> Flow-List </listname>
+  <label> Flow Rate (Gal/sec) </label>
+</slidebar>
+
+<repeatlist>
+  <name> Target-List </name>
+  <firstval> 30.0 </firstval>
+  <repeat>
+    <reps> 41 </reps>
+    <stepsize> 1.0 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+  <row> 4.2 </row><col> 1.0 </col>
+  <name> TargetTemp </name>
+  <listname> Target-List </listname>
+  <label> Target Temperature (°C) </label>
+</slidebar>
+
+</groupbox>
+
+<!-- Status Display -->
+<groupbox>
+   <row> 9.4 </row><col> 1.0 </col>
+   <high> 6.0 </high><wide> 30.0 </wide>
+   <title> Tank Status </title>
+
+<showvalue>
+   <row> 1.4 </row><col> 1.0 </col>
+   <name> WaterRemaining </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Water Remaining (Gal) </label>
+</showvalue>
+
+<showvalue>
+   <row> 2.8 </row><col> 1.0 </col>
+   <name> WaterUsed </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Water Used (Gal) </label>
+</showvalue>
+
+<showvalue>
+   <row> 4.2 </row><col> 1.0 </col>
+   <name> EnergyRequired </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Energy Required (kJ) </label>
+</showvalue>
+
+</groupbox>
+
+<!-- Usage Graph -->
+<showgraph>
+  <row> 2.0 </row><col> 31.0 </col>
+  <high> 13.0 </high><wide> 28.0 </wide>
+  <leftmargin> 6 </leftmargin>
+  <xaxis>
+    <name> System.X </name>
+    <label> Time (Sec) </label>
+    <scale><min> 0 </min><max> 300 </max></scale>
+  </xaxis>
+  <yaxis>
+    <yvar>
+      <name> WaterRemaining </name>
+      <label> Water Level </label>
+      <linecolor> BLUE </linecolor>
+    </yvar>
+    <scale><min> 0 </min><max> 100 </max></scale>
+  </yaxis>
+</showgraph>
+
+<infobutton>
+  <row> 15.8 </row><col> 1.0 </col>
+  <label> About Water Heater </label>
+  <line> This model simulates a water heater with: </line>
+  <line> - Adjustable tank size (30-100 gallons) </line>
+  <line> - Variable flow rate </line>
+  <line> - Temperature control </line>
+  <line>  </line>
+  <line> Energy calculation uses the formula: </line>
+  <line> E = m * c * ΔT </line>
+  <line> where: </line>
+  <line> m = mass of water </line>
+  <line> c = specific heat of water (4.186 kJ/kg°C) </line>
+  <line> ΔT = temperature change </line>
+</infobutton>
+
+</panel>
+</display>
+
+</model>

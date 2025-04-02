@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+
+<model>
+  <title><basic>High-Pass RC Filter</basic></title>
+
+  <structure>
+    <name>RC_HighPass</name>
+
+    <variables>
+      <!-- Parameters: Resistance, Capacitance -->
+      <parm>
+        <name> R </name>
+        <val> 10000.0 </val>  <!-- 10kΩ -->
+      </parm>
+
+      <parm>
+        <name> C </name>
+        <val> 0.000001 </val>  <!-- 1μF -->
+      </parm>
+
+      <var>
+        <name> Vin </name>
+      </var>
+
+      <var>
+        <name> Vout </name>
+      </var>
+
+      <var>
+        <name> I </name>  <!-- Current through the circuit -->
+      </var>
+
+      <var>
+        <name> Q </name>  <!-- Charge on the capacitor -->
+      </var>
+
+      <var>
+        <name> Tau </name>
+      </var>
+
+      <whitenoise> 
+        <name> WhiteNoise </name>
+        <lowerlim> 1 </lowerlim>
+        <upperlim> 12.0 </upperlim> 
+      </whitenoise>
+    </variables>
+
+    <equations>
+      <!-- Differential equation for charge -->
+      <diffeq>
+
+            <diffeq>
+        <name> Vout </name>
+        <integralname> Vout </integralname>
+        <initialval> 0.0 </initialval>
+        <dervname> dVout/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+
+        <name> Q </name>
+        <integralname> Q </integralname>
+        <initialval> 0.0 </initialval>
+        <dervname> dQ/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+    </equations>
+
+    <definitions>
+      <block><name>Parms</name>
+        <def>
+          <name> Tau </name>
+          <val> R * C </val>
+        </def>  
+      </block>
+
+      <block><name>Dervs</name>
+        <def>
+          <name> Vin </name>
+          <val> WhiteNoise </val>
+        </def>
+
+                <def>
+          <name> dVout/dt </name>
+          <val> ( I / C ) + ( Q * R ) </val>
+        </def>
+
+        <!-- Current equation based on input voltage -->
+        <def>
+          <name> I </name>
+          <val> ( Vin - Vout ) / R </val>
+        </def>
+
+        <!-- Change in charge is determined by current -->
+        <def>
+          <name> dQ/dt </name>
+          <val> I </val>
+        </def>
+
+        <!-- Output voltage is determined by charge on capacitor -->
+        <def>
+          <name> Vout </name>
+          <val> Q / C </val>
+        </def>
+      </block>
+    </definitions>
+  </structure>
+
+  <math>
+    <parms>RC_HighPass.Parms</parms>
+    <dervs>RC_HighPass.Dervs</dervs>
+  </math>
+
+  <control>
+    <gofor>
+      <solutionint> 0.0001 </solutionint>
+      <displayint> 0.001 </displayint>
+      <menuitem> High Resolution </menuitem>
+    </gofor>
+
+    <gofor>
+      <solutionint> 0.1 </solutionint>
+      <displayint> 0.001 </displayint>
+      <menuitem> Standard </menuitem>
+    </gofor>
+
+    <gofor>
+      <solutionint> 1 </solutionint>
+      <displayint> 0.1 </displayint>
+      <menuitem> Low Resolution </menuitem>
+    </gofor>
+  </control>
+
+  <display>
+    <panel>
+      <name>RC High-Pass Filter Response</name>
+      <structurename>RC_HighPass</structurename>
+
+      <showvalue>
+        <row> 1 </row><col> 1 </col>
+        <name> Vin </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Input Voltage </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 2 </row><col> 1 </col>
+        <name> Vout </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Output Voltage </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 3 </row><col> 1 </col>
+        <name> Tau </name>
+        <format><decimal> 6 </decimal></format>
+        <label> Time Constant (Tau) </label>
+      </showvalue>
+
+      <showgraph>
+        <row> 4 </row><col> 20 </col>
+        <high> 10 </high><wide> 60 </wide>
+        <leftmargin> 5 </leftmargin>
+        <xaxis>
+          <name> System.X </name>
+          <label> Time (s) </label>
+          <scale><min> 0 </min><max> 0.1 </max></scale>
+        </xaxis>
+        <yaxis>
+          <yvar>
+            <name> Vout </name>
+            <label> V Out </label>
+            <linecolor> BLUE </linecolor>
+          </yvar>
+          <yvar>
+            <name> Vin </name>
+            <label> V In </label>
+            <linecolor> RED </linecolor>
+          </yvar>
+          <scale><min> 0 </min><max> 1.2 </max></scale>
+        </yaxis>
+      </showgraph>
+    </panel>
+  </display>
+</model>

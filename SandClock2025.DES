@@ -1,0 +1,181 @@
+<?xml version='1.0' ?>
+
+<model>
+  <title><basic> Sand Clock Model </basic></title>
+
+  <structure>
+    <name> SandClock </name>
+
+    <variables>
+      <!-- Parameters -->
+      <parm>
+        <name> ApertureSize </name>
+        <val> 0.005 </val> <!-- in meters -->
+      </parm>
+
+      <parm>
+        <name> VolumeSand </name>
+        <val> 0.5 </val> <!-- in liters -->
+      </parm>
+
+      <parm>
+        <name> MassSand </name>
+        <val> 0.8 </val> <!-- in kg -->
+      </parm>
+
+      <parm>
+        <name> BulbDiameter </name>
+        <val> 0.1 </val> <!-- in meters -->
+      </parm>
+
+      <parm>
+        <name> TimeToEmpty </name>
+        <val> 60 </val> <!-- in seconds -->
+      </parm>
+
+      <!-- Dynamic Variable -->
+      <var>
+        <name> FlowRate </name>
+      </var>
+
+    </variables>
+
+    <equations>
+      <diffeq>
+        <name> Sand </name>
+        <integralname> Sand </integralname>
+        <initialval> 0.5 </initialval>
+        <dervname> dSand/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+
+      <diffeq>
+        <name> Time </name>
+        <integralname> Time </integralname>
+        <initialval> 0 </initialval>
+        <dervname> dTime/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+    </equations>
+
+    <definitions>
+      <block>
+        <name> Dervs </name>
+
+        <def>
+          <name> FlowRate </name>
+          <val> ( VolumeSand / TimeToEmpty ) </val>
+        </def>
+
+        <def>
+          <name> dSand/dt </name>
+          <val> - FlowRate </val>
+        </def>
+
+        <def>
+          <name> dTime/dt </name>
+          <val> 1 </val>
+        </def>
+
+      </block>
+    </definitions>
+  </structure>
+
+  <math>
+    <dervs> SandClock.Dervs </dervs>
+  </math>
+
+  <control>
+    <gofor>
+      <solutionint> 0.1 </solutionint>
+      <displayint> 0.1 </displayint>
+    </gofor>
+    <gofor>
+      <solutionint> 1 </solutionint>
+      <displayint> 0.1 </displayint>
+    </gofor>
+    <gofor>
+      <solutionint> 5 </solutionint>
+      <displayint> 0.5 </displayint>
+    </gofor>
+    <gofor>
+      <solutionint> 10 </solutionint>
+      <displayint> 1 </displayint>
+    </gofor>
+  </control>
+
+  <display>
+    <panel>
+      <name> Sand Clock </name>
+      <structurename> SandClock </structurename>
+        
+        <repeatlist>
+          <name> Decimal  </name>
+          <firstval> 100 </firstval>
+          <repeat>
+          <reps> 20 </reps>
+          <stepsize> 50  </stepsize>
+       </repeat>
+        </repeatlist>
+          <slidebar>
+        <row> 1  </row>
+        <col> 20  </col>
+        <name> VolumeSand  </name>
+        <listname> Decimal  </listname>
+        <label> Sand Volume </label>
+      </slidebar>
+          <slidebar>
+        <row> 1  </row>
+        <col> 20  </col>
+        <name> VolumeSand  </name>
+        <listname> Decimal  </listname>
+        <label> Sand Volume </label>
+      </slidebar>
+
+
+
+      <showvalue>
+        <row> 1 </row><col> 1 </col>
+        <name> Sand </name>
+        <format><decimal> 3 </decimal></format>
+        <label> Sand Left (L) </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 2 </row><col> 1 </col>
+        <name> Time </name>
+        <format><decimal> 1 </decimal></format>
+        <label> Time Elapsed (s) </label>
+      </showvalue>
+
+      <showvalue>
+        <row> 3 </row><col> 1 </col>
+        <name> FlowRate </name>
+        <format><decimal> 4 </decimal></format>
+        <label> Flow Rate (L/s) </label>
+      </showvalue>
+
+      <showgraph>
+        <row> 5 </row><col> 1 </col>
+        <high> 10 </high><wide> 30 </wide>
+        <leftmargin> 6 </leftmargin>
+
+        <xaxis>
+          <name> Time </name>
+          <label> Time (s) </label>
+          <scale><min> 0 </min><max> 60 </max></scale>
+        </xaxis>
+
+        <yaxis>
+          <yvar>
+            <name> Sand </name>
+            <label> Sand Left </label>
+          </yvar>
+          <scale><min> 0 </min><max> 0.5 </max></scale>
+        </yaxis>
+      </showgraph>
+
+    </panel>
+  </display>
+
+</model>

@@ -1,0 +1,340 @@
+<?xml version='1.0'?>
+
+<model>
+
+<title><basic> Pressure Cooker Safety Model </basic></title>
+
+<structure>
+<name> Cooker </name>
+
+<variables>
+
+<parm>
+  <name> CookerVolume </name>
+  <val> 6.0 </val>
+</parm>
+
+<parm>
+  <name> WaterVolume </name>
+  <val> 2.0 </val>
+</parm>
+
+<parm>
+  <name> HeatingPower </name>
+  <val> 1500.0 </val>
+</parm>
+
+<parm>
+  <name> VesselDurability </name>
+  <val> 8.0 </val>
+</parm>
+
+<constant>
+  <name> WaterDensity </name>
+  <val> 1.0 </val>
+</constant>
+
+<constant>
+  <name> WaterHeatCapacity </name>
+  <val> 4186.0 </val>
+</constant>
+
+<constant>
+  <name> LatentHeat </name>
+  <val> 2260000.0 </val>
+</constant>
+
+<var>
+  <name> Temperature_Current </name>
+  <val> 25.0 </val>
+</var>
+
+<var>
+  <name> Pressure </name>
+  <val> 0.0 </val>
+</var>
+
+<var>
+  <name> SteamMass </name>
+  <val> 0.0 </val>
+</var>
+
+<var>
+  <name> VesselStress </name>
+  <val> 0.0 </val>
+</var>
+
+<var>
+  <name> FailureRisk </name>
+  <val> 0.0 </val>
+</var>
+
+<var>
+  <name> HasExploded </name>
+  <val> 0.0 </val>
+</var>
+
+</variables>
+
+<equations>
+
+<diffeq>
+  <name> Temperature </name>
+  <integralname> Temperature_I </integralname>
+  <initialval> 25.0 </initialval>
+  <dervname> dTemp_dt </dervname>
+  <errorlim> 0.01 </errorlim>
+</diffeq>
+
+<diffeq>
+  <name> Steam </name>
+  <integralname> Steam_I </integralname>
+  <initialval> 0.0 </initialval>
+  <dervname> dSteam_dt </dervname>
+  <errorlim> 0.001 </errorlim>
+</diffeq>
+
+</equations>
+
+<definitions>
+
+<block><name> Init </name>
+  <def>
+    <name> Temperature_Current </name>
+    <val> 25.0 </val>
+  </def>
+  <def>
+    <name> HasExploded </name>
+    <val> 0.0 </val>
+  </def>
+</block>
+
+<block><name> Context </name>
+</block>
+
+<block><name> Parms </name>
+  <def>
+    <name> VesselStress </name>
+    <val> Pressure * ( CookerVolume / VesselDurability ) </val>
+  </def>
+</block>
+
+<block><name> Dervs </name>
+
+<def>
+  <name> Temperature_Current </name>
+  <val> Temperature_I </val>
+</def>
+
+<def>
+  <name> dTemp_dt </name>
+  <val> ( HeatingPower / ( WaterVolume * WaterDensity * WaterHeatCapacity ) ) * ( 1.0 - HasExploded ) </val>
+</def>
+
+<conditional>
+  <name> dSteam_dt </name>
+  <test> Temperature_Current GE 100.0 </test>
+  <true> ( HeatingPower / LatentHeat ) * ( 1.0 - HasExploded ) </true>
+  <false> 0.0 </false>
+</conditional>
+
+<def>
+  <name> Pressure </name>
+  <val> ( Steam_I * 8.314 * ( Temperature_Current + 273.15 ) ) / ( ( CookerVolume - WaterVolume ) * 0.001 ) </val>
+</def>
+
+<def>
+  <name> FailureRisk </name>
+  <val> VesselStress / ( VesselDurability * 100000.0 ) </val>
+</def>
+
+</block>
+
+<block><name> Wrapup </name>
+<conditional>
+  <name> HasExploded </name>
+  <test> FailureRisk GT 1.0 </test>
+  <true> 1.0 </true>
+  <false> HasExploded </false>
+</conditional>
+</block>
+
+</definitions>
+
+</structure>
+
+<math>
+<context> Cooker.Context </context>
+<parms> Cooker.Parms </parms>
+<dervs> Cooker.Dervs </dervs>
+<wrapup> Cooker.Wrapup </wrapup>
+</math>
+
+<control>
+<gofor>
+  <solutionint> 600.0 </solutionint>
+  <displayint> 1.0 </displayint>
+</gofor>
+</control>
+
+<display>
+<panel><name> Pressure Cooker Monitor </name>
+<structurename> Cooker </structurename>
+
+<showpanelname>
+  <row> 0.5 </row><col> 1.0 </col>
+</showpanelname>
+
+
+
+
+<groupbox>
+   <row> 2.0 </row><col> 1.0 </col>
+   <high> 8.0 </high><wide> 30.0 </wide>
+   <title> Parameters </title>
+
+<repeatlist>
+  <name> CookerVolume </name>
+  <repeat>
+    <reps> 17 </reps>
+    <stepsize> 0.5 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+   <row> 1.4 </row><col> 1.0 </col>
+   <name> CookerVolume </name>
+   <listname> CookerVolume </listname>
+   <label> Cooker Volume (L) </label>
+</slidebar>
+
+<repeatlist>
+  <name> WaterVolume </name>
+  <repeat>
+    <reps> 16 </reps>
+    <stepsize> 0.5 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+   <row> 2.8 </row><col> 1.0 </col>
+   <name> WaterVolume </name>
+   <listname> WaterVolume </listname>
+   <label> Water Volume (L) </label>
+</slidebar>
+
+<repeatlist>
+  <name> HeatingPower </name>
+  <repeat>
+    <reps> 21 </reps>
+    <stepsize> 100.0 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+   <row> 4.2 </row><col> 1.0 </col>
+   <name> HeatingPower </name>
+   <listname> HeatingPower </listname>
+   <label> Heating Power (W) </label>
+</slidebar>
+
+<repeatlist>
+  <name> VesselDurability </name>
+  <repeat>
+    <reps> 19 </reps>
+    <stepsize> 0.5 </stepsize>
+  </repeat>
+</repeatlist>
+
+<slidebar>
+   <row> 5.6 </row><col> 1.0 </col>
+   <name> VesselDurability </name>
+   <listname> VesselDurability </listname>
+   <label> Vessel Durability (1-10) </label>
+</slidebar>
+
+</groupbox>
+
+<groupbox>
+   <row> 10.5 </row><col> 1.0 </col>
+   <high> 8.0 </high><wide> 30.0 </wide>
+   <title> Status </title>
+
+<showvalue>
+   <row> 1.4 </row><col> 1.0 </col>
+   <name> Temperature_Current </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Temperature (C) </label>
+</showvalue>
+
+<showvalue>
+   <row> 2.8 </row><col> 1.0 </col>
+   <name> Pressure </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Pressure (kPa) </label>
+</showvalue>
+
+<showvalue>
+   <row> 4.2 </row><col> 1.0 </col>
+   <name> FailureRisk </name>
+   <format><decimal> 3 </decimal></format>
+   <label> Failure Risk </label>
+</showvalue>
+
+<showvalue>
+   <row> 5.6 </row><col> 1.0 </col>
+   <name> HasExploded </name>
+   <format><decimal> 0 </decimal></format>
+   <label> Has Exploded? </label>
+</showvalue>
+
+</groupbox>
+
+<showgraph>
+  <row> 2.0 </row><col> 32.0 </col>
+  <high> 7.0 </high><wide> 28.0 </wide>
+  <leftmargin> 6 </leftmargin>
+  <xaxis>
+    <name> System.X </name>
+    <label> Time (s) </label>
+    <scale><min> 0 </min><max> 600 </max></scale>
+  </xaxis>
+  <yaxis>
+    <yvar>
+      <name> Temperature_Current </name>
+      <label> Temp </label>
+      <linecolor> RED </linecolor>
+    </yvar>
+    <scale><min> 0 </min><max> 200 </max></scale>
+  </yaxis>
+</showgraph>
+
+<showgraph>
+  <row> 10.5 </row><col> 32.0 </col>
+  <high> 7.0 </high><wide> 28.0 </wide>
+  <leftmargin> 6 </leftmargin>
+  <xaxis>
+    <name> System.X </name>
+    <label> Time (s) </label>
+    <scale><min> 0 </min><max> 600 </max></scale>
+  </xaxis>
+  <yaxis>
+    <yvar>
+      <name> Pressure </name>
+      <label> Pressure </label>
+      <linecolor> BLUE </linecolor>
+    </yvar>
+    <yvar>
+      <name> FailureRisk </name>
+      <label> Risk </label>
+      <linecolor> RED </linecolor>
+    </yvar>
+    <scale><min> 0 </min><max> 2 </max></scale>
+  </yaxis>
+</showgraph>
+
+</panel>
+
+</display>
+
+</model>

@@ -1,0 +1,109 @@
+<?xml version = '1.0' ?>
+
+<model>
+
+  <title><basic> Hair Growth Dynamics </basic></title>
+
+  <structure>
+    <name> HairModel </name>
+
+    <variables>
+      <parm>
+        <name> GrowthFactor </name>
+        <val> 1.0 </val>
+      </parm>
+
+      <parm>
+        <name> MaxGrowthRate </name>
+        <val> 0.05 </val>
+      </parm>
+
+      <parm>
+        <name> LossRate </name>
+        <val> 0.01 </val>
+      </parm>
+
+      <var>
+        <name> NetGrowth </name>
+      </var>
+    </variables>
+
+    <equations>
+      <diffeq>
+        <name> HairLength </name>
+        <integralname> HairLength </integralname>
+        <initialval> 1.0 </initialval>
+        <dervname> dHairLength/dt </dervname>
+        <errorlim> 0.001 </errorlim>
+      </diffeq>
+    </equations>
+
+    <definitions>
+
+      <block>
+        <name> Dervs </name>
+
+        <def>
+          <name> NetGrowth </name>
+          <val> MaxGrowthRate * GrowthFactor - LossRate * HairLength </val>
+        </def>
+
+        <def>
+          <name> dHairLength/dt </name>
+          <val> NetGrowth </val>
+        </def>
+
+      </block>
+
+    </definitions>
+  </structure>
+
+  <math>
+    <dervs> HairModel.Dervs </dervs>
+  </math>
+
+  <control>
+    <gofor>
+      <solutionint> 30 </solutionint>
+      <displayint> 1.0 </displayint>
+    </gofor>
+  </control>
+
+  <display>
+    <panel>
+      <name> Hair Growth Panel </name>
+      <structurename> HairModel </structurename>
+
+      <showpanelname>
+        <row> 0.5 </row><col> 1.0 </col>
+      </showpanelname>
+
+      <showvalue>
+        <row> 2 </row><col> 1 </col>
+        <name> HairLength </name>
+        <format><decimal> 2 </decimal></format>
+        <label> Hair Length </label>
+      </showvalue>
+
+      <showgraph>
+        <row> 3 </row><col> 1 </col>
+        <high> 10 </high><wide> 30 </wide>
+        <leftmargin> 5 </leftmargin>
+        <xaxis>
+          <name> System.X </name>
+          <label> Time </label>
+          <scale><min> 0 </min><max> 30 </max></scale>
+        </xaxis>
+        <yaxis>
+          <yvar>
+            <name> HairLength </name>
+            <label> Hair Length </label>
+          </yvar>
+          <scale><min> 0 </min><max> 5 </max></scale>
+        </yaxis>
+      </showgraph>
+
+    </panel>
+  </display>
+
+</model>
