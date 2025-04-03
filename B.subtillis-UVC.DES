@@ -1,0 +1,210 @@
+<?xml version = '1.0' ?>
+
+<model>
+
+<title><basic> Bacillus Subtilis UVC Inactivation </basic></title>
+
+<structure>
+<name> BSubtilisUVC </name>
+
+<variables> ======================================
+
+<parm>
+  <name> N0 </name>
+  <val> 1000000 </val>
+</parm>
+
+<parm>
+  <name> k </name>
+  <val> 0.005 </val>
+</parm>
+
+<parm>
+  <name> I </name>
+  <val> 10 </val>
+</parm>
+
+<var>
+  <name> N </name>
+</var>
+
+<var>
+  <name> LogN </name>
+</var>
+
+</variables>
+
+<definitions> ===================================
+
+<block><name> Dervs </name> ======================
+
+<def>
+  <name> N </name>
+  <val> N0 * EXP ( - k * I * System.X ) </val>
+</def>
+
+<def>
+  <name> LogN </name>
+  <val> LOG10 N </val>
+</def>
+
+</block>
+
+</definitions>
+</structure>
+
+<math>
+  <dervs> BSubtilisUVC.Dervs </dervs>
+</math>
+
+<control> ========================================
+
+<gofor>
+  <solutionint> 60 </solutionint>
+  <displayint> 1 </displayint>
+  <menuitem> 60 Seconds </menuitem>
+</gofor>
+
+<gofor>
+  <solutionint> 120 </solutionint>
+  <displayint> 2 </displayint>
+  <menuitem> 120 Seconds </menuitem>
+</gofor>
+
+<gofor>
+  <solutionint> 300 </solutionint>
+  <displayint> 5 </displayint>
+  <menuitem> 300 Seconds </menuitem>
+</gofor>
+
+</control>
+
+<display> =========================================
+<panel>
+
+<name> UVC Inactivation </name>
+
+<structurename> BSubtilisUVC </structurename>
+
+<showpanelname>
+  <row> 0.5 </row><col> 1.0 </col>
+</showpanelname>
+
+<showvalue>
+   <row> 2.0 </row><col> 1 </col>
+   <name> System.X </name>
+   <format><decimal> 1 </decimal></format>
+   <label> Time (sec) </label>
+</showvalue>
+
+<showvalue>
+   <row> 3.0 </row><col> 1 </col>
+   <name> N </name>
+   <format><decimal> 0 </decimal></format>
+   <label> Surviving Cells </label>
+</showvalue>
+
+<showvalue>
+   <row> 4.0 </row><col> 1 </col>
+   <name> LogN </name>
+   <format><decimal> 2 </decimal></format>
+   <label> Log10(Surviving Cells) </label>
+</showvalue>
+
+<repeatlist>
+  <name> UVC_Intensity </name>
+  <repeat><reps> 20 </reps><stepsize> 1 </stepsize></repeat>
+  <repeat><reps> 8 </reps><stepsize> 10 </stepsize></repeat>
+</repeatlist>
+
+<slidebar>
+  <row> 6.0 </row><col> 1 </col>
+  <name> I </name>
+  <listname> UVC_Intensity </listname>
+  <label> UVC Intensity </label>
+</slidebar>
+
+<repeatlist>
+  <name> DeathRate </name>
+  <firstval> 0.001 </firstval>
+  <repeat><reps> 10 </reps><stepsize> 0.001 </stepsize></repeat>
+  <repeat><reps> 9 </reps><stepsize> 0.01 </stepsize></repeat>
+</repeatlist>
+
+<slidebar>
+  <row> 7.5 </row><col> 1 </col>
+  <name> k </name>
+  <listname> DeathRate </listname>
+  <label> Death Rate Coefficient </label>
+</slidebar>
+
+<editbox>
+  <row> 9.0 </row><col> 1 </col>
+  <name> N0 </name>
+  <label> Initial Cell Count </label>
+</editbox>
+
+<infobutton>
+  <row> 11.0 </row><col> 1 </col>
+  <label> Model Info </label>
+  <line> This model simulates the inactivation of </line>
+  <line> Bacillus subtilis by UVC light using the </line>
+  <line> Chick-Watson model: </line>
+  <line>  </line>
+  <line> N = N0 * exp(-k * I * t) </line>
+  <line>  </line>
+  <line> Where: </line>
+  <line> N = surviving cells at time t </line>
+  <line> N0 = initial cell count </line>
+  <line> k = death rate coefficient </line>
+  <line> I = UVC intensity </line>
+  <line> t = exposure time (seconds) </line>
+  <line>  </line>
+  <line> Note: The death rate coefficient (k) should </line>
+  <line> be adjusted based on experimental data for </line>
+  <line> the specific strain of B. subtilis and the </line>
+  <line> UVC source being used. </line>
+</infobutton>
+
+<showgraph>
+  <row> 2.0 </row><col> 30 </col>
+  <high> 10 </high><wide> 30 </wide>
+  <leftmargin> 6 </leftmargin>
+  <xaxis>
+    <name> System.X </name>
+    <label> Time (seconds) </label>
+    <scale><min> 0 </min><max> 60 </max></scale>
+  </xaxis>
+  <yaxis>
+    <yvar>
+      <name> N </name>
+      <label> Cells </label>
+      <linecolor> BLUE </linecolor>
+    </yvar>
+    <scale><min> 0 </min><max> 1000000 </max></scale>
+  </yaxis>
+</showgraph>
+
+<showgraph>
+  <row> 13.0 </row><col> 30 </col>
+  <high> 10 </high><wide> 30 </wide>
+  <leftmargin> 6 </leftmargin>
+  <xaxis>
+    <name> System.X </name>
+    <label> Time (seconds) </label>
+    <scale><min> 0 </min><max> 60 </max></scale>
+  </xaxis>
+  <yaxis>
+    <yvar>
+      <name> LogN </name>
+      <label> Log10(Cells) </label>
+      <linecolor> RED </linecolor>
+    </yvar>
+    <scale><min> 0 </min><max> 6 </max></scale>
+  </yaxis>
+</showgraph>
+
+</panel>
+</display>
+
+</model>
